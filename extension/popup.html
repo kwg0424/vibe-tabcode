@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>TapCode</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- WebDAV 연결 (처음 설정 / 설정에서 변경) -->
+  <section id="view-connect" class="view" hidden>
+    <header class="titlebar">
+      <button type="button" id="connect-back" class="icon back" data-icon="back" title="뒤로"></button>
+      <h1>서버(WebDAV) 연결</h1>
+    </header>
+    <form id="form-connect">
+      <label>WebDAV 폴더 주소<input name="url" type="url" required placeholder="https://my-server/folder"></label>
+      <label>아이디<input name="username" autocomplete="off" required></label>
+      <label>비밀번호<input name="password" type="password" autocomplete="off"></label>
+      <p class="hint">금고 파일은 이 폴더 아래 계정별 파일로 저장되고, 아이디·비밀번호로 암호화됩니다. 다른 PC에서도 같은 아이디·비밀번호를 넣으면 열립니다. 저장된 비밀번호는 다시 표시하지 않습니다.</p>
+      <button type="submit" class="accent">연결 및 동기화</button>
+    </form>
+  </section>
+
+  <!-- 코드 목록 -->
+  <section id="view-main" class="view" hidden>
+    <header>
+      <h1>TapCode</h1>
+      <div class="actions">
+        <button id="btn-add" class="icon" data-icon="plus" title="계정 추가"></button>
+        <button id="btn-edit" class="icon" data-icon="edit" title="편집"></button>
+        <button id="btn-settings" class="icon" data-icon="settings" title="설정"></button>
+      </div>
+    </header>
+    <p id="sync-error" class="hint sync-error" hidden></p>
+    <ul id="list"></ul>
+    <p id="empty" class="hint" hidden>등록된 OTP가 없습니다. ＋ 로 추가하세요.</p>
+  </section>
+
+  <!-- 계정 추가 -->
+  <section id="view-add" class="view" hidden>
+    <header class="titlebar">
+      <button type="button" class="icon back" data-goto="main" data-icon="back" title="뒤로"></button>
+      <h1>계정 추가</h1>
+    </header>
+    <div class="row">
+      <button id="btn-scan" class="accent">화면에서 QR 스캔</button>
+      <label class="file-button accent">QR 이미지<input id="qr-file" type="file" accept="image/*" hidden></label>
+    </div>
+    <p class="hint" id="qr-hint"></p>
+    <div class="divider">또는 URI 붙여넣기</div>
+    <form id="form-uri">
+      <input name="uri" placeholder="otpauth://totp/... 또는 otpauth-migration://..." autocomplete="off">
+      <button type="submit" class="accent">URI로 추가</button>
+    </form>
+    <div class="divider">또는 직접 입력</div>
+    <form id="form-add">
+      <label>서비스명<input name="issuer"></label>
+      <label>계정<input name="account"></label>
+      <label>시크릿 키 (Base32)<input name="secret" autocomplete="off" required></label>
+      <label>자동 입력할 사이트 (선택)<input name="domain" placeholder="예: github.com" autocomplete="off"></label>
+      <details>
+        <summary>고급</summary>
+        <div class="row">
+          <label>유형<select name="type"><option value="totp">TOTP</option><option value="hotp">HOTP</option></select></label>
+          <label>알고리즘<select name="algorithm"><option>SHA1</option><option>SHA256</option><option>SHA512</option></select></label>
+        </div>
+        <div class="row">
+          <label>자릿수<select name="digits"><option>6</option><option>7</option><option>8</option></select></label>
+          <label>주기(초)<input name="period" type="number" value="30" min="1"></label>
+        </div>
+      </details>
+      <button type="submit" class="accent">추가</button>
+    </form>
+  </section>
+
+  <!-- 설정 -->
+  <section id="view-settings" class="view" hidden>
+    <header class="titlebar">
+      <button type="button" class="icon back" data-goto="main" data-icon="back" title="뒤로"></button>
+      <h1>설정</h1>
+    </header>
+    <p class="hint" id="mode-info"></p>
+    <div class="stack">
+      <button id="btn-sync" class="accent" hidden>동기화<span id="dirty-dot" hidden></span></button>
+      <div class="row">
+        <button id="btn-connect">서버(WebDAV) 연결</button>
+        <button id="btn-to-local" class="danger" hidden>브라우저 저장으로 전환</button>
+      </div>
+    </div>
+    <div class="shortcuts">
+      <div class="hint">단축키</div>
+      <ul id="shortcut-list"></ul>
+    </div>
+    <div class="hint">백업</div>
+    <div class="row backup">
+      <button id="btn-export" class="accent">OTP 내보내기</button>
+      <label class="file-button accent">OTP 가져오기<input id="import-file" type="file" accept=".txt,text/plain" hidden></label>
+    </div>
+    <p class="hint">내보낸 파일에는 시크릿 키가 그대로 들어 있습니다. 안전한 곳에 보관하세요.</p>
+    <div class="stack">
+      <button id="btn-reset" class="danger">이 기기 데이터 삭제</button>
+    </div>
+  </section>
+
+  <!-- 충돌 선택 -->
+  <dialog id="conflict">
+    <p id="conflict-text"></p>
+    <div class="stack">
+      <button value="remote" id="conflict-remote" class="accent">서버 버전으로 덮어쓰기</button>
+      <button value="local">이 기기 버전을 서버에 올리기</button>
+      <button value="">취소</button>
+    </div>
+  </dialog>
+
+  <div id="busy" hidden>처리 중…</div>
+  <div id="toast" hidden></div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

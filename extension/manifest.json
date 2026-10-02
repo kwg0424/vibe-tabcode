@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "TapCode - 클릭 한 번 OTP 입력",
+  "version": "1.4.0",
+  "description": "TOTP/HOTP 2단계 인증 코드 생성기. 화면 QR 스캔으로 계정을 추가하고 단축키로 코드를 자동 입력합니다. 키는 기기에서 암호화되어 브라우저 프로필 또는 사용자의 WebDAV 서버에 저장됩니다.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "TapCode",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "commands": {
+    "_execute_action": {
+      "description": "TapCode 팝업 열기"
+    },
+    "autofill": {
+      "suggested_key": {
+        "default": "Alt+X"
+      },
+      "description": "현재 사이트에 인증 코드 자동 입력"
+    }
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "short_name": "TapCode"
+}

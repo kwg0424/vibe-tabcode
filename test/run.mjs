@@ -128,21 +128,21 @@ await test("사이트 매칭: 지정 도메인 / 서비스명 추정 / 피싱 �
 });
 
 await test("계정 하나에 사이트 여러 개 / 클릭 입력 시 사이트 추가", async () => {
-  const qp = { id: "qp", issuer: "Admin", domain: "" };
+  const acct = { id: "acct", issuer: "Admin", domain: "" };
   const other = { id: "gh", issuer: "GitHub", domain: "github.com" };
   const host = "admin.example.com";
-  assert.equal(findAccounts([qp, other], host).length, 0); // 저장 전: Alt+X 가 못 찾음
-  qp.domain = addDomain(qp.domain, host);
-  assert.equal(qp.domain, "admin.example.com");
-  assert.deepEqual(findAccounts([qp, other], host).map((a) => a.id), ["qp"]);
-  assert.equal(findAccounts([qp], "wiki.example.com").length, 0); // 같은 회사 다른 서비스엔 안 걸림
-  qp.domain = addDomain(qp.domain, "qp2.example.com");
-  assert.equal(addDomain(qp.domain, host), qp.domain); // 중복 추가 안 됨
-  assert.deepEqual(domainList(qp.domain), ["admin.example.com", "qp2.example.com"]);
-  assert.deepEqual(findAccounts([qp], "qp2.example.com").map((a) => a.id), ["qp"]);
+  assert.equal(findAccounts([acct, other], host).length, 0); // 저장 전: Alt+X 가 못 찾음
+  acct.domain = addDomain(acct.domain, host);
+  assert.equal(acct.domain, "admin.example.com");
+  assert.deepEqual(findAccounts([acct, other], host).map((a) => a.id), ["acct"]);
+  assert.equal(findAccounts([acct], "wiki.example.com").length, 0); // 같은 회사 다른 서비스엔 안 걸림
+  acct.domain = addDomain(acct.domain, "admin2.example.net");
+  assert.equal(addDomain(acct.domain, host), acct.domain); // 중복 추가 안 됨
+  assert.deepEqual(domainList(acct.domain), ["admin.example.com", "admin2.example.net"]);
+  assert.deepEqual(findAccounts([acct], "admin2.example.net").map((a) => a.id), ["acct"]);
   assert.equal(joinDomains(" https://A.com/x , b.com,, a.com "), "a.com,b.com");
-  const round = accountsFromText(toOtpauthUri(normalizeAccount({ ...qp, secret: "JBSWY3DPEHPK3PXP" }))).accounts[0];
-  assert.equal(round.domain, qp.domain); // 내보내기/가져오기에도 유지
+  const round = accountsFromText(toOtpauthUri(normalizeAccount({ ...acct, secret: "JBSWY3DPEHPK3PXP" }))).accounts[0];
+  assert.equal(round.domain, acct.domain); // 내보내기/가져오기에도 유지
 });
 
 await test("QR 스캔한 사이트의 대표 도메인", async () => {

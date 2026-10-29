@@ -57,7 +57,7 @@ button {
 button:hover { border-color: var(--accent); }
 button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
 button.danger { color: var(--danger); }
-/* 파란 글씨에 옅은 파란 바탕 (동기화 등 설정 화면 버튼, DragOn 옵션과 같은 모양) */
+/* 파란 글씨에 옅은 파란 바탕 (동기화 등 설정 화면 버튼) */
 button.accent, .file-button.accent { color: var(--accent); background: color-mix(in srgb, var(--accent) 22%, transparent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
 button.accent:hover, .file-button.accent:hover { background: color-mix(in srgb, var(--accent) 32%, transparent); border-color: var(--accent); }
 /* 아이콘 버튼: 모두 같은 크기(32px 칸, 18px 아이콘)·같은 색 */
@@ -72,7 +72,7 @@ button.icon:hover, button.mini:hover, button.icon.active { color: var(--accent);
 button.mini .ico { width: 16px; height: 16px; }
 button.mini.del:hover { color: var(--danger); }
 #btn-sync { position: relative; }
-/* 설정 화면 버튼 글자 크기·여백은 DragOn 옵션 버튼과 같게 */
+/* 설정 화면 버튼 글자 크기·여백 */
 #view-settings button:not(.icon), #view-settings .file-button, #form-connect button,
 #view-add button:not(.icon), #view-add .file-button { font-size: 14px; padding: 8px 14px; border-radius: 8px; }
 #form-uri button { white-space: nowrap; }
